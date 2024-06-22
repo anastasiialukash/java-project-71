@@ -13,6 +13,15 @@ public class App implements Callable<String> {
         System.exit(exitCode);
     }
 
+    @CommandLine.Parameters(index = "0", description = "path to first file", hideParamSyntax = true)
+    private String filepath1;
+
+    @CommandLine.Parameters(index = "1", description = "path to second file", hideParamSyntax = true)
+    private String filepath2;
+
+    @CommandLine.Option(names = {"-f", "--format"}, description = "output format [default: stylish]")
+    private String format = "format";
+
     @Override
     public String call() throws Exception {
         return "";
