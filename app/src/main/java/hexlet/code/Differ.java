@@ -29,12 +29,12 @@ public class Differ {
             Map<String, Object> removed = new HashMap<>();
             Map<String, Object> unchanged = new HashMap<>();
 
-            Map<String, Object> firstFileJsonObj
-                    = objectMapper.readValue(fileContent1, new TypeReference<>() {
+            Map<String, Object> firstFileJsonObj = objectMapper.readValue(fileContent1, new TypeReference<>() {
+
             });
 
-            Map<String, Object> secondFileJsonObj
-                    = objectMapper.readValue(fileContent2, new TypeReference<>() {
+            Map<String, Object> secondFileJsonObj = objectMapper.readValue(fileContent2, new TypeReference<>() {
+
             });
 
             for (Map.Entry<String, Object> entry : firstFileJsonObj.entrySet()) {
@@ -57,7 +57,7 @@ public class Differ {
                 params.add(entry.getKey());
                 String key = entry.getKey();
                 Object value = entry.getValue();
-                if(!firstFileJsonObj.containsKey(key)) {
+                if (!firstFileJsonObj.containsKey(key)) {
                     added.put(key, value);
                 }
             }
@@ -66,17 +66,17 @@ public class Differ {
 
             System.out.println("{");
             sortedParams.forEach(param -> {
-                if(changed.containsKey(param)) {
+                if (changed.containsKey(param)) {
                     System.out.println("  - " + param + ": " + firstFileJsonObj.get(param));
                     System.out.println("  + " + param + ": " + secondFileJsonObj.get(param));
                 }
-                if(unchanged.containsKey(param)) {
+                if (unchanged.containsKey(param)) {
                     System.out.println("    " + param + ": " + unchanged.get(param));
                 }
-                if(removed.containsKey(param)) {
+                if (removed.containsKey(param)) {
                     System.out.println("  - " + param + ": " + removed.get(param));
                 }
-                if(added.containsKey(param)) {
+                if (added.containsKey(param)) {
                     System.out.println("  + " + param + ": " + added.get(param));
                 }
             });

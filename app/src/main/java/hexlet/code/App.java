@@ -20,7 +20,7 @@ public class App implements Callable<String> {
     private String filepath2;
 
     @CommandLine.Option(names = {"-f", "--format"}, description = "output format [default: stylish]")
-    private String format = "format";
+    private final String format = "format";
 
     @Override
     public String call() throws Exception {
