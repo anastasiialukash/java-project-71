@@ -20,6 +20,13 @@ jobs:
         - name: Build with Gradle
           run: ./gradlew -b ci.gradle package
 
+        - name: Upload build artifacts
+          uses: actions/upload-artifact@v4
+          with:
+            name: Package
+            path: build/libs
+
+
       # - name: Publish code coverage
       #   uses: paambaati/codeclimate-action@v5.0.0
       #   env:
