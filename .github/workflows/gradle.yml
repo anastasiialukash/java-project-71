@@ -52,5 +52,6 @@ jobs:
         JACOCO_SOURCE_PATH: app/src/main/java
       with:
         coverageCommand: gradle test jacocoTestReport -p app
-        coverageLocations: app/build/reports/jacoco/test/jacocoTestReport.xml:jacoco
+        coverageLocations: |
+          app/build/reports/jacoco/test/jacocoTestReport.xml:jacoco
         debug: true
