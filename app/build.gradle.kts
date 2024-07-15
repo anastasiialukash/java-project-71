@@ -36,7 +36,7 @@ tasks.jacocoTestReport {
     dependsOn(tasks.test)
     reports {
         xml.required.set(true)
-        html.required.set(true)
+        xml.outputLocation.set(file("build/reports/jacoco/test/jacocoTestReport.xml"))
     }
 }
 
