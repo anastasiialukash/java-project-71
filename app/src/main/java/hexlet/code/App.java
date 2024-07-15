@@ -20,10 +20,10 @@ public class App implements Callable<String> {
     private String filepath2;
 
     @CommandLine.Option(names = {"-f", "--format"}, description = "output format [default: stylish]")
-    private final String format = "format";
+    private String format = "format";
 
     @Override
-    public String call() throws Exception {
+    public String call() {
         Differ differ = new Differ();
         return differ.generate(filepath1, filepath2);
     }

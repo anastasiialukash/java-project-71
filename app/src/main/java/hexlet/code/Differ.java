@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 
 public class Differ {
     public String generate(String filePath1, String filePath2) {
+        StringBuilder sb = new StringBuilder();
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             Set<String> params = new HashSet<>();
@@ -64,27 +65,33 @@ public class Differ {
 
             Stream<String> sortedParams = params.stream().sorted();
 
-            System.out.println("{");
+            sb.append("{\n");
             sortedParams.forEach(param -> {
                 if (changed.containsKey(param)) {
-                    System.out.println("  - " + param + ": " + firstFileJsonObj.get(param));
-                    System.out.println("  + " + param + ": " + secondFileJsonObj.get(param));
+                    String changedFirst = "  - " + param + ": " + firstFileJsonObj.get(param);
+                    String changedSecond = "  + " + param + ": " + secondFileJsonObj.get(param);
+                    sb.append(changedFirst);
+                    sb.append("\n");
+                    sb.append(changedSecond);
+                    sb.append("\n");
+                    //System.out.println("  + " + param + ": " + secondFileJsonObj.get(param));
                 }
                 if (unchanged.containsKey(param)) {
-                    System.out.println("    " + param + ": " + unchanged.get(param));
+                    sb.append("    ").append(param).append(": ").append(unchanged.get(param)).append("\n");
                 }
                 if (removed.containsKey(param)) {
-                    System.out.println("  - " + param + ": " + removed.get(param));
+                    sb.append("  - ").append(param).append(": ").append(removed.get(param)).append("\n");
                 }
                 if (added.containsKey(param)) {
-                    System.out.println("  + " + param + ": " + added.get(param));
+                    sb.append("  + ").append(param).append(": ").append(added.get(param)).append("\n");
                 }
             });
-            System.out.println("}");
+            sb.append("}");
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return null;
+        System.out.println(sb);
+        return sb.toString();
     }
 }
