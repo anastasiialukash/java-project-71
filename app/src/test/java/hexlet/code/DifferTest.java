@@ -30,4 +30,25 @@ class DifferTest {
         assertEquals(expectedResult, methodResult);
         logger.info("Finished test");
     }
+
+    @Test
+    public void differYAMLTest() {
+        logger.info("Starting test");
+        String firstPath = "src/test/java/hexlet/resources/file1.yml";
+        String secondPath = "src/test/java/hexlet/resources/file2.yml";
+
+        String expectedResult = """
+                {
+                  - follow: false
+                    host: hexlet.io
+                  - proxy: 123.234.53.22
+                  - timeout: 50
+                  + timeout: 20
+                  + verbose: true
+                }""";
+
+        String methodResult = differ.generate(firstPath, secondPath);
+        assertEquals(expectedResult, methodResult);
+        logger.info("Finished test");
+    }
 }

@@ -1,12 +1,6 @@
 package hexlet.code;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -15,83 +9,84 @@ import java.util.stream.Stream;
 
 public class Differ {
     public String generate(String filePath1, String filePath2) {
-        StringBuilder sb = new StringBuilder();
-        ObjectMapper objectMapper = new ObjectMapper();
+        Set<String> params = new HashSet<>();
+
+        Map<String, Object> changed = new HashMap<>();
+        Map<String, Object> added = new HashMap<>();
+        Map<String, Object> removed = new HashMap<>();
+        Map<String, Object> unchanged = new HashMap<>();
+        Map<String, Object> firstFileJsonObj;
+        Map<String, Object> secondFileJsonObj;
+
         try {
-            Set<String> params = new HashSet<>();
-            Path firstFilePath = Paths.get(filePath1).toAbsolutePath().normalize();
-            Path secondFilePath = Paths.get(filePath2).toAbsolutePath().normalize();
-
-            String fileContent1 = Files.readString(firstFilePath);
-            String fileContent2 = Files.readString(secondFilePath);
-
-            Map<String, Object> changed = new HashMap<>();
-            Map<String, Object> added = new HashMap<>();
-            Map<String, Object> removed = new HashMap<>();
-            Map<String, Object> unchanged = new HashMap<>();
-
-            Map<String, Object> firstFileJsonObj = objectMapper.readValue(fileContent1, new TypeReference<>() {
-
-            });
-
-            Map<String, Object> secondFileJsonObj = objectMapper.readValue(fileContent2, new TypeReference<>() {
-
-            });
-
-            for (Map.Entry<String, Object> entry : firstFileJsonObj.entrySet()) {
-                params.add(entry.getKey());
-                String key = entry.getKey();
-                Object value = entry.getValue();
-                if (secondFileJsonObj.containsKey(key)) {
-                    if (secondFileJsonObj.get(key).equals(value)) {
-                        unchanged.put(key, value);
-                    }
-                    if (!secondFileJsonObj.get(key).equals(value)) {
-                        changed.put(key, value);
-                    }
-                } else {
-                    removed.put(key, value);
-                }
-            }
-
-            for (Map.Entry<String, Object> entry : secondFileJsonObj.entrySet()) {
-                params.add(entry.getKey());
-                String key = entry.getKey();
-                Object value = entry.getValue();
-                if (!firstFileJsonObj.containsKey(key)) {
-                    added.put(key, value);
-                }
-            }
-
-            Stream<String> sortedParams = params.stream().sorted();
-
-            sb.append("{\n");
-            sortedParams.forEach(param -> {
-                if (changed.containsKey(param)) {
-                    String changedFirst = "  - " + param + ": " + firstFileJsonObj.get(param);
-                    String changedSecond = "  + " + param + ": " + secondFileJsonObj.get(param);
-                    sb.append(changedFirst);
-                    sb.append("\n");
-                    sb.append(changedSecond);
-                    sb.append("\n");
-                    //System.out.println("  + " + param + ": " + secondFileJsonObj.get(param));
-                }
-                if (unchanged.containsKey(param)) {
-                    sb.append("    ").append(param).append(": ").append(unchanged.get(param)).append("\n");
-                }
-                if (removed.containsKey(param)) {
-                    sb.append("  - ").append(param).append(": ").append(removed.get(param)).append("\n");
-                }
-                if (added.containsKey(param)) {
-                    sb.append("  + ").append(param).append(": ").append(added.get(param)).append("\n");
-                }
-            });
-            sb.append("}");
-
+            firstFileJsonObj = Parser.parseFiles(filePath1);
+            secondFileJsonObj = Parser.parseFiles(filePath2);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(sb);
+
+        for (Map.Entry<String, Object> entry : firstFileJsonObj.entrySet()) {
+            params.add(entry.getKey());
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            if (secondFileJsonObj.containsKey(key)) {
+                if (secondFileJsonObj.get(key).equals(value)) {
+                    unchanged.put(key, value);
+                }
+                if (!secondFileJsonObj.get(key).equals(value)) {
+                    changed.put(key, value);
+                }
+            } else {
+                removed.put(key, value);
+            }
+        }
+
+        for (Map.Entry<String, Object> entry : secondFileJsonObj.entrySet()) {
+            params.add(entry.getKey());
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            if (!firstFileJsonObj.containsKey(key)) {
+                added.put(key, value);
+            }
+        }
+        String result = getResultString(params, changed, unchanged, added, removed,
+                firstFileJsonObj, secondFileJsonObj);
+        OutputOperations.printResult(result);
+        return result;
+    }
+
+    private String getResultString(Set<String> params,
+                                   Map<String, Object> changedItems,
+                                   Map<String, Object> unchangedItems,
+                                   Map<String, Object> addedItems,
+                                   Map<String, Object> removedItems,
+                                   Map<String, Object> firstInitialObj,
+                                   Map<String, Object> secondInitialObj) {
+        StringBuilder sb = new StringBuilder();
+        Stream<String> sortedParams = params.stream().sorted();
+
+        sb.append("{\n");
+        sortedParams.forEach(param -> {
+            if (changedItems.containsKey(param)) {
+                String changedFirst = "  - " + param + ": " + firstInitialObj.get(param);
+                String changedSecond = "  + " + param + ": " + secondInitialObj.get(param);
+                sb.append(changedFirst);
+                sb.append("\n");
+                sb.append(changedSecond);
+                sb.append("\n");
+            }
+            if (unchangedItems.containsKey(param)) {
+                sb.append("    ").append(param).append(": ").append(unchangedItems.get(param)).append("\n");
+            }
+            if (removedItems.containsKey(param)) {
+                sb.append("  - ").append(param).append(": ").append(removedItems.get(param)).append("\n");
+            }
+            if (addedItems.containsKey(param)) {
+                sb.append("  + ").append(param).append(": ").append(addedItems.get(param)).append("\n");
+            }
+        });
+        sb.append("}");
+
         return sb.toString();
     }
 }
