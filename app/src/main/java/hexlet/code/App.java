@@ -19,12 +19,13 @@ public class App implements Callable<String> {
     @CommandLine.Parameters(index = "1", description = "path to second file", hideParamSyntax = true)
     private String filepath2;
 
-    @CommandLine.Option(names = {"-f", "--format"}, description = "output format [default: stylish]")
-    private String format = "format";
+    @CommandLine.Option(names = {"-f", "--format"}, defaultValue = "stylish",
+            description = "output format [default: stylish]")
+    private String format;
 
     @Override
     public String call() {
         Differ differ = new Differ();
-        return differ.generate(filepath1, filepath2);
+        return differ.generate(filepath1, filepath2, format);
     }
 }

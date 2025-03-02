@@ -1,22 +1,19 @@
 package hexlet.code;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import hexlet.models.DiffModel;
+
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Stream;
+import java.util.Iterator;
+
+
+import static hexlet.code.Formatters.getResultString;
 
 public class Differ {
-    public String generate(String filePath1, String filePath2) {
-        Set<String> params = new HashSet<>();
-
-        Map<String, Object> changed = new HashMap<>();
-        Map<String, Object> added = new HashMap<>();
-        Map<String, Object> removed = new HashMap<>();
-        Map<String, Object> unchanged = new HashMap<>();
-        Map<String, Object> firstFileJsonObj;
-        Map<String, Object> secondFileJsonObj;
+    public String generate(String filePath1, String filePath2, String format) {
+        JsonNode firstFileJsonObj;
+        JsonNode secondFileJsonObj;
 
         try {
             firstFileJsonObj = Parser.parseFiles(filePath1);
@@ -25,68 +22,47 @@ public class Differ {
             throw new RuntimeException(e);
         }
 
-        for (Map.Entry<String, Object> entry : firstFileJsonObj.entrySet()) {
-            params.add(entry.getKey());
-            String key = entry.getKey();
-            Object value = entry.getValue();
-            if (secondFileJsonObj.containsKey(key)) {
-                if (secondFileJsonObj.get(key).equals(value)) {
-                    unchanged.put(key, value);
-                }
-                if (!secondFileJsonObj.get(key).equals(value)) {
-                    changed.put(key, value);
-                }
-            } else {
-                removed.put(key, value);
-            }
-        }
+        DiffModel diff = calculateDiff(firstFileJsonObj, secondFileJsonObj);
 
-        for (Map.Entry<String, Object> entry : secondFileJsonObj.entrySet()) {
-            params.add(entry.getKey());
-            String key = entry.getKey();
-            Object value = entry.getValue();
-            if (!firstFileJsonObj.containsKey(key)) {
-                added.put(key, value);
-            }
-        }
-        String result = getResultString(params, changed, unchanged, added, removed,
-                firstFileJsonObj, secondFileJsonObj);
+        String result = getResultString(diff, "stylish");
         OutputOperations.printResult(result);
+
         return result;
     }
 
-    private String getResultString(Set<String> params,
-                                   Map<String, Object> changedItems,
-                                   Map<String, Object> unchangedItems,
-                                   Map<String, Object> addedItems,
-                                   Map<String, Object> removedItems,
-                                   Map<String, Object> firstInitialObj,
-                                   Map<String, Object> secondInitialObj) {
-        StringBuilder sb = new StringBuilder();
-        Stream<String> sortedParams = params.stream().sorted();
+    private DiffModel calculateDiff(JsonNode firstFileJsonObj, JsonNode secondFileJsonObj) {
+        ObjectNode firstObject = (ObjectNode) firstFileJsonObj;
+        ObjectNode secondObject = (ObjectNode) secondFileJsonObj;
+        DiffModel diffResult = new DiffModel();
 
-        sb.append("{\n");
-        sortedParams.forEach(param -> {
-            if (changedItems.containsKey(param)) {
-                String changedFirst = "  - " + param + ": " + firstInitialObj.get(param);
-                String changedSecond = "  + " + param + ": " + secondInitialObj.get(param);
-                sb.append(changedFirst);
-                sb.append("\n");
-                sb.append(changedSecond);
-                sb.append("\n");
-            }
-            if (unchangedItems.containsKey(param)) {
-                sb.append("    ").append(param).append(": ").append(unchangedItems.get(param)).append("\n");
-            }
-            if (removedItems.containsKey(param)) {
-                sb.append("  - ").append(param).append(": ").append(removedItems.get(param)).append("\n");
-            }
-            if (addedItems.containsKey(param)) {
-                sb.append("  + ").append(param).append(": ").append(addedItems.get(param)).append("\n");
-            }
-        });
-        sb.append("}");
+        Iterator<String> firstObjectFields = firstObject.fieldNames();
+        while (firstObjectFields.hasNext()) {
+            String fieldName = firstObjectFields.next();
+            JsonNode firstVal = firstObject.get(fieldName);
+            JsonNode secondVal = secondObject.get(fieldName);
 
-        return sb.toString();
+            if (!secondObject.has(fieldName)) {
+                diffResult.getRemovedItems().put(fieldName, firstVal);
+            } else {
+                if (firstVal.equals(secondVal)) {
+                    diffResult.getUnchangedItems().put(fieldName, firstVal);
+                } else {
+                    DiffModel.ChangedValue changedVal =
+                            new DiffModel.ChangedValue(firstVal, secondVal);
+                    diffResult.getChangedItems().put(fieldName, changedVal);
+                }
+            }
+        }
+
+        Iterator<String> secondObjectFields = secondObject.fieldNames();
+        while (secondObjectFields.hasNext()) {
+            String secondObjectFieldName = secondObjectFields.next();
+            if (!firstObject.has(secondObjectFieldName)) {
+                JsonNode value = secondObject.get(secondObjectFieldName);
+                diffResult.getAddedItems().put(secondObjectFieldName, value);
+            }
+        }
+
+        return diffResult;
     }
 }

@@ -17,26 +17,15 @@ class DifferTest {
 
     @ParameterizedTest
     @MethodSource("dataProvider")
-    public void shouldGenerateExpectedDiffWhenComparingTwoFiles(String firstPath, String secondPath, String expectedDiff) {
+    public void shouldGenerateExpectedDiff(String firstPath, String secondPath, String expectedDiff) {
         logger.info("Comparing two files");
-        String methodResult = differ.generate(firstPath, secondPath);
+        String methodResult = differ.generate(firstPath, secondPath, "stylish");
         assertEquals(expectedDiff, methodResult, "The generated diff did not match the expected output.");
     }
 
     private static Stream<Arguments> dataProvider() {
-        String expectedSimpleFilesDiff = getExpectedResultForSimpleFiles();
         String expectedNestedFilesDiff = getExpectedResultForNestedFiles();
         return Stream.of(
-                Arguments.of(
-                        getResourceFilePath("simpleJsonFirst.json"), //todo: remove for simple once support for nested is implemented
-                        getResourceFilePath("simpleJsonSecond.json"),
-                        expectedSimpleFilesDiff
-                ),
-                Arguments.of(
-                        getResourceFilePath("simpleYmlFirst.yml"),
-                        getResourceFilePath("simpleYmlSecond.yml"),
-                        expectedSimpleFilesDiff
-                ),
                 Arguments.of(
                         getResourceFilePath("nestedJsonFirst.json"),
                         getResourceFilePath("nestedJsonSecond.json"),
@@ -48,18 +37,6 @@ class DifferTest {
                         expectedNestedFilesDiff
                 )
         );
-    }
-
-    private static String getExpectedResultForSimpleFiles() {
-        return """
-                {
-                  - follow: false
-                    host: hexlet.io
-                  - proxy: 123.234.53.22
-                  - timeout: 50
-                  + timeout: 20
-                  + verbose: true
-                }""";
     }
 
     private static String getExpectedResultForNestedFiles() {
