@@ -11,7 +11,7 @@ import java.util.Iterator;
 import static hexlet.code.Formatters.getResultString;
 
 public class Differ {
-    public String generate(String filePath1, String filePath2, String format) {
+    public String generate(String filePath1, String filePath2, String format) throws IOException {
         JsonNode firstFileJsonObj;
         JsonNode secondFileJsonObj;
 

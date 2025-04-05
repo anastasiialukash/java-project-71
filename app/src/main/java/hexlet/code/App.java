@@ -3,6 +3,7 @@ package hexlet.code;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
+import java.io.IOException;
 import java.util.concurrent.Callable;
 
 @Command(name = "gendiff", mixinStandardHelpOptions = true, version = "1.0",
@@ -24,7 +25,7 @@ public class App implements Callable<String> {
     private String format;
 
     @Override
-    public String call() {
+    public String call() throws IOException {
         Differ differ = new Differ();
         return differ.generate(filepath1, filepath2, format);
     }

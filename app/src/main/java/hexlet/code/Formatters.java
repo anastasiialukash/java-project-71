@@ -1,8 +1,11 @@
 package hexlet.code;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import hexlet.models.DiffModel;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -11,7 +14,7 @@ import java.util.stream.Stream;
 
 public class Formatters {
 
-    static String getResultString(DiffModel diff, String format) {
+    static String getResultString(DiffModel diff, String format) throws IOException {
         Set<String> allKeys = new HashSet<>();
         allKeys.addAll(diff.getRemovedItems().keySet());
         allKeys.addAll(diff.getAddedItems().keySet());
@@ -21,6 +24,7 @@ public class Formatters {
 
         return switch (format) {
             case "plain" -> getResultInPlainFormat(sortedKeys, diff);
+            case "json" -> getResultInJsonFormat(diff);
             default -> getResultInStylishFormat(sortedKeys, diff);
         };
     }
@@ -121,6 +125,12 @@ public class Formatters {
         return node.isTextual() ? node.asText() : node.toString();
     }
 
+    private static String getResultInJsonFormat(DiffModel diff) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        return mapper.writeValueAsString(diff);
+    }
+
     private static String getLineForPlainFormat(
             String property,
             String valueBefore,
@@ -136,6 +146,7 @@ public class Formatters {
             default -> "Unknown operation " + operation;
         };
     }
+
 
     private static boolean isObjectOrArray(JsonNode jsonNode) {
         return jsonNode.isObject() || jsonNode.isArray();

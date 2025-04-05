@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -17,7 +18,11 @@ class DifferTest {
 
     @ParameterizedTest
     @MethodSource("dataProvider")
-    public void shouldGenerateExpectedDiff(String firstPath, String secondPath, String expectedDiff, String format) {
+    public void shouldGenerateExpectedDiff(
+            String firstPath,
+            String secondPath,
+            String expectedDiff,
+            String format) throws IOException {
         logger.info("Comparing two files");
         String methodResult = differ.generate(firstPath, secondPath, format);
         assertEquals(expectedDiff, methodResult, "The generated diff did not match the expected output.");
@@ -26,6 +31,7 @@ class DifferTest {
     private static Stream<Arguments> dataProvider() {
         String expectedDiffForStylishFormat = getExpectedResultForStylishFormat();
         String expectedDiffForPlainFormat = getExpectedResultForPlainFormat();
+        String expectedDiffForJsonFormat = getExpectedResultForJsonFormat();
         return Stream.of(
                 Arguments.of(
                         getResourceFilePath("nestedJsonFirst.json"),
@@ -50,7 +56,20 @@ class DifferTest {
                         getResourceFilePath("nestedYmlSecond.yml"),
                         expectedDiffForPlainFormat,
                         "plain"
+                ),
+                Arguments.of(
+                        getResourceFilePath("nestedJsonFirst.json"),
+                        getResourceFilePath("nestedJsonSecond.json"),
+                        expectedDiffForJsonFormat,
+                        "json"
+                ),
+                Arguments.of(
+                        getResourceFilePath("nestedYmlFirst.yml"),
+                        getResourceFilePath("nestedYmlSecond.yml"),
+                        expectedDiffForJsonFormat,
+                        "json"
                 )
+
         );
     }
 
@@ -99,5 +118,61 @@ class DifferTest {
                 Property 'setting2' was updated. From 200 to 300
                 Property 'setting3' was updated. From true to 'none'
                 """;
+    }
+
+    public static String getExpectedResultForJsonFormat() {
+        return """
+                {
+                  "changedItems" : {
+                    "setting2" : {
+                      "oldValue" : 200,
+                      "newValue" : 300
+                    },
+                    "setting3" : {
+                      "oldValue" : true,
+                      "newValue" : "none"
+                    },
+                    "default" : {
+                      "oldValue" : null,
+                      "newValue" : [ "value1", "value2" ]
+                    },
+                    "chars2" : {
+                      "oldValue" : [ "d", "e", "f" ],
+                      "newValue" : false
+                    },
+                    "setting1" : {
+                      "oldValue" : "Some value",
+                      "newValue" : "Another value"
+                    },
+                    "numbers2" : {
+                      "oldValue" : [ 2, 3, 4, 5 ],
+                      "newValue" : [ 22, 33, 44, 55 ]
+                    },
+                    "checked" : {
+                      "oldValue" : false,
+                      "newValue" : true
+                    },
+                    "id" : {
+                      "oldValue" : 45,
+                      "newValue" : null
+                    }
+                  },
+                  "unchangedItems" : {
+                    "chars1" : [ "a", "b", "c" ],
+                    "numbers1" : [ 1, 2, 3, 4 ]
+                  },
+                  "addedItems" : {
+                    "key2" : "value2",
+                    "numbers4" : [ 4, 5, 6 ],
+                    "obj1" : {
+                      "nestedKey" : "value",
+                      "isNested" : true
+                    }
+                  },
+                  "removedItems" : {
+                    "key1" : "value1",
+                    "numbers3" : [ 3, 4, 5 ]
+                  }
+                }""";
     }
 }
