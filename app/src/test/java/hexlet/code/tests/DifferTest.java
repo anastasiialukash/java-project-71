@@ -17,29 +17,44 @@ class DifferTest {
 
     @ParameterizedTest
     @MethodSource("dataProvider")
-    public void shouldGenerateExpectedDiff(String firstPath, String secondPath, String expectedDiff) {
+    public void shouldGenerateExpectedDiff(String firstPath, String secondPath, String expectedDiff, String format) {
         logger.info("Comparing two files");
-        String methodResult = differ.generate(firstPath, secondPath, "stylish");
+        String methodResult = differ.generate(firstPath, secondPath, format);
         assertEquals(expectedDiff, methodResult, "The generated diff did not match the expected output.");
     }
 
     private static Stream<Arguments> dataProvider() {
-        String expectedNestedFilesDiff = getExpectedResultForNestedFiles();
+        String expectedDiffForStylishFormat = getExpectedResultForStylishFormat();
+        String expectedDiffForPlainFormat = getExpectedResultForPlainFormat();
         return Stream.of(
                 Arguments.of(
                         getResourceFilePath("nestedJsonFirst.json"),
                         getResourceFilePath("nestedJsonSecond.json"),
-                        expectedNestedFilesDiff
+                        expectedDiffForStylishFormat,
+                        "stylish"
                 ),
                 Arguments.of(
                         getResourceFilePath("nestedYmlFirst.yml"),
                         getResourceFilePath("nestedYmlSecond.yml"),
-                        expectedNestedFilesDiff
+                        expectedDiffForStylishFormat,
+                        "stylish"
+                ),
+                Arguments.of(
+                        getResourceFilePath("nestedJsonFirst.json"),
+                        getResourceFilePath("nestedJsonSecond.json"),
+                        expectedDiffForPlainFormat,
+                        "plain"
+                ),
+                Arguments.of(
+                        getResourceFilePath("nestedYmlFirst.yml"),
+                        getResourceFilePath("nestedYmlSecond.yml"),
+                        expectedDiffForPlainFormat,
+                        "plain"
                 )
         );
     }
 
-    private static String getExpectedResultForNestedFiles() {
+    private static String getExpectedResultForStylishFormat() {
         return """
                 {
                      chars1: [a, b, c]
@@ -66,5 +81,23 @@ class DifferTest {
                    - setting3: true
                    + setting3: none
                  }""";
+    }
+
+    private static String getExpectedResultForPlainFormat() {
+        return """
+                Property 'chars2' was updated. From [complex value] to false
+                Property 'checked' was updated. From false to true
+                Property 'default' was updated. From null to [complex value]
+                Property 'id' was updated. From 45 to null
+                Property 'key1' was removed
+                Property 'key2' was added with value: 'value2'
+                Property 'numbers2' was updated. From [complex value] to [complex value]
+                Property 'numbers3' was removed
+                Property 'numbers4' was added with value: [complex value]
+                Property 'obj1' was added with value: [complex value]
+                Property 'setting1' was updated. From 'Some value' to 'Another value'
+                Property 'setting2' was updated. From 200 to 300
+                Property 'setting3' was updated. From true to 'none'
+                """;
     }
 }

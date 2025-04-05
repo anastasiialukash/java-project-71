@@ -24,7 +24,7 @@ public class Differ {
 
         DiffModel diff = calculateDiff(firstFileJsonObj, secondFileJsonObj);
 
-        String result = getResultString(diff, "stylish");
+        String result = getResultString(diff, format);
         OutputOperations.printResult(result);
 
         return result;
