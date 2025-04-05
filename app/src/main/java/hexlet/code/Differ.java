@@ -30,6 +30,10 @@ public class Differ {
         return result;
     }
 
+    public static String generate(String filePath1, String filePath2) throws IOException {
+        return generate(filePath1, filePath2, "stylish");
+    }
+
     private static DiffModel calculateDiff(JsonNode firstFileJsonObj, JsonNode secondFileJsonObj) {
         ObjectNode firstObject = (ObjectNode) firstFileJsonObj;
         ObjectNode secondObject = (ObjectNode) secondFileJsonObj;
