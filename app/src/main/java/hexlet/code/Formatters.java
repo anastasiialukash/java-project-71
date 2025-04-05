@@ -52,7 +52,7 @@ public class Formatters {
                         nodeToSingleLine(diff.getAddedItems().get(fieldName))));
             }
         });
-        sb.append(" }");
+        sb.append("}");
 
         return sb.toString();
     }

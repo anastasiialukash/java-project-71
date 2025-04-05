@@ -99,7 +99,7 @@ class DifferTest {
                   + setting2: 300
                   - setting3: true
                   + setting3: none
-                 }""";
+                }""";
     }
 
     private static String getExpectedResultForPlainFormat() {
