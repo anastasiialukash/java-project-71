@@ -11,7 +11,7 @@ import java.util.Iterator;
 import static hexlet.code.Formatters.getResultString;
 
 public class Differ {
-    public String generate(String filePath1, String filePath2, String format) throws IOException {
+    public static String generate(String filePath1, String filePath2, String format) throws IOException {
         JsonNode firstFileJsonObj;
         JsonNode secondFileJsonObj;
 
@@ -30,7 +30,7 @@ public class Differ {
         return result;
     }
 
-    private DiffModel calculateDiff(JsonNode firstFileJsonObj, JsonNode secondFileJsonObj) {
+    private static DiffModel calculateDiff(JsonNode firstFileJsonObj, JsonNode secondFileJsonObj) {
         ObjectNode firstObject = (ObjectNode) firstFileJsonObj;
         ObjectNode secondObject = (ObjectNode) secondFileJsonObj;
         DiffModel diffResult = new DiffModel();
