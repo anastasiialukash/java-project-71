@@ -19,4 +19,5 @@
     - **plain**: compact text summary
     - **json**: machine-readable format for further processing
 
-[Watch the demo](app/project_diff.mov)
+
+<video src="app/project_diff.mov" controls></video>
