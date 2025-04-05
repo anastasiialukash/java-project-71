@@ -20,4 +20,4 @@
     - **json**: machine-readable format for further processing
 
 
-<video src="app/project_diff.mov" controls></video>
+[Watch the demo](app/project_diff.mov)
