@@ -54,7 +54,7 @@ public class Formatters {
         });
         sb.append("}");
 
-        return sb.toString();
+        return sb.toString().trim();
     }
 
     private static String getResultInPlainFormat(Stream<String> sortedKeys, DiffModel diff) {
@@ -78,10 +78,11 @@ public class Formatters {
                 JsonNode valueNode = diff.getAddedItems().get(fieldName);
                 String value = isObjectOrArray(valueNode) ? complexValueStr : valueNode.toString();
                 sb.append(getLineForPlainFormat(fieldName, value, value, "add"));
+                sb.append("\n");
             }
         });
 
-        return sb.toString();
+        return sb.toString().trim();
     }
 
     private static String nodeToSingleLine(JsonNode node) {
