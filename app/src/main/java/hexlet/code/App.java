@@ -24,6 +24,10 @@ public class App implements Callable<String> {
             description = "output format [default: stylish]")
     private String format;
 
+    /***
+     * @return diff between two files
+     * @throws IOException
+     */
     @Override
     public String call() throws IOException {
         Differ differ = new Differ();
