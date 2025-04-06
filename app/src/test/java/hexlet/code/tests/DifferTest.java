@@ -13,8 +13,8 @@ import static hexlet.code.tests.providers.TestDataProvider.getResourceFilePath;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DifferTest {
-    Logger logger = Logger.getLogger(DifferTest.class.getName());
-    Differ differ = new Differ();
+    private Logger logger = Logger.getLogger(DifferTest.class.getName());
+    private Differ differ = new Differ();
 
     @ParameterizedTest
     @MethodSource("dataProvider")
