@@ -78,7 +78,6 @@ public class Formatters {
                 JsonNode valueNode = diff.getAddedItems().get(fieldName);
                 String value = isObjectOrArray(valueNode) ? complexValueStr : valueNode.toString();
                 sb.append(getLineForPlainFormat(fieldName, value, value, "add"));
-                sb.append("\n");
             }
         });
 
