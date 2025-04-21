@@ -19,4 +19,4 @@
     - **plain**: compact text summary
     - **json**: machine-readable format for further processing
 
-[Watch the demo]([project_diff.mov](assests/project_diff.mov))
+[Watch the demo](assests/project_diff.mov)
