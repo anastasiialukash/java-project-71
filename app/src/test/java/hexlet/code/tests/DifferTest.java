@@ -9,7 +9,9 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import static hexlet.code.Differ.generate;
-import static hexlet.code.Formatters.*;
+import static hexlet.code.Formatters.JSON_FORMAT;
+import static hexlet.code.Formatters.PLAIN_FORMAT;
+import static hexlet.code.Formatters.STYLISH_FORMAT;
 import static hexlet.code.tests.providers.TestDataProvider.getExpectedResult;
 import static hexlet.code.tests.providers.TestDataProvider.getResourceFilePath;
 import static org.junit.jupiter.api.Assertions.assertEquals;
