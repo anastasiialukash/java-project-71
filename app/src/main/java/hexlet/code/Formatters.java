@@ -13,6 +13,9 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public class Formatters {
+    public static final String PLAIN_FORMAT = "plain";
+    public static final String STYLISH_FORMAT = "stylish";
+    public static final String JSON_FORMAT = "json";
 
     static String getResultString(DiffModel diff, String format) throws IOException {
         Set<String> allKeys = new HashSet<>();
@@ -23,8 +26,8 @@ public class Formatters {
         Stream<String> sortedKeys = allKeys.stream().sorted();
 
         return switch (format) {
-            case "plain" -> getResultInPlainFormat(sortedKeys, diff);
-            case "json" -> getResultInJsonFormat(diff);
+            case PLAIN_FORMAT -> getResultInPlainFormat(sortedKeys, diff);
+            case JSON_FORMAT -> getResultInJsonFormat(diff);
             default -> getResultInStylishFormat(sortedKeys, diff);
         };
     }

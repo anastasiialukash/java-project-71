@@ -5,31 +5,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class Parser {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final YAMLMapper YAML_MAPPER = new YAMLMapper();
+    private static final String JSON = "json";
+    private static final String YML = "yml";
 
-    public static JsonNode parseFiles(String fileName) throws IOException {
-
-        if (fileName == null) {
-            return null;
-        }
-
-        Path filePath = Paths.get(fileName).toAbsolutePath().normalize();
-        String fileContent = Files.readString(filePath);
-
-        if (fileName.endsWith(".json")) {
-            return OBJECT_MAPPER.readTree(fileContent);
-        }
-
-        if (fileName.endsWith(".yml")) {
-            return YAML_MAPPER.readTree(fileContent);
-        }
-
-        return null;
+    public static JsonNode parseContent(String fileContent, String fileFormat) throws IOException {
+        return switch (fileFormat) {
+            case JSON -> OBJECT_MAPPER.readTree(fileContent);
+            case YML -> YAML_MAPPER.readTree(fileContent);
+            default -> throw new IllegalArgumentException("Unsupported file format: " + fileFormat);
+        };
     }
 }

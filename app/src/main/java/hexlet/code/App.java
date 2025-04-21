@@ -6,6 +6,8 @@ import picocli.CommandLine.Command;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
+import static hexlet.code.Differ.generate;
+
 @Command(name = "gendiff", mixinStandardHelpOptions = true, version = "1.0",
         description = "Compares two configuration files and shows a difference.")
 public class App implements Callable<String> {
@@ -30,7 +32,8 @@ public class App implements Callable<String> {
      */
     @Override
     public String call() throws IOException {
-        Differ differ = new Differ();
-        return differ.generate(filepath1, filepath2, format);
+        String result = generate(filepath1, filepath2, format);
+        OutputOperations.printResult(result);
+        return result;
     }
 }

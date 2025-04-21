@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import hexlet.models.DiffModel;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Iterator;
 
 
@@ -15,19 +17,12 @@ public class Differ {
         JsonNode firstFileJsonObj;
         JsonNode secondFileJsonObj;
 
-        try {
-            firstFileJsonObj = Parser.parseFiles(filePath1);
-            secondFileJsonObj = Parser.parseFiles(filePath2);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        firstFileJsonObj = getParsedObject(filePath1);
+        secondFileJsonObj = getParsedObject(filePath2);
 
         DiffModel diff = calculateDiff(firstFileJsonObj, secondFileJsonObj);
 
-        String result = getResultString(diff, format);
-        OutputOperations.printResult(result);
-
-        return result;
+        return getResultString(diff, format);
     }
 
     public static String generate(String filePath1, String filePath2) throws IOException {
@@ -68,5 +63,19 @@ public class Differ {
         }
 
         return diffResult;
+    }
+
+    private static JsonNode getParsedObject(String filePath) {
+        JsonNode parsedObject;
+        try {
+            String fileContent = Files.readString(Paths.get(filePath).toAbsolutePath().normalize());
+            String[] fileNameSubstrings = filePath.split("\\.");
+            String format = fileNameSubstrings[fileNameSubstrings.length - 1];
+            parsedObject = Parser.parseContent(fileContent, format);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return parsedObject;
     }
 }

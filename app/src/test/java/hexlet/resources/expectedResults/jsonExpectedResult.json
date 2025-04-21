@@ -1,0 +1,52 @@
+{
+  "changedItems" : {
+    "setting2" : {
+      "oldValue" : 200,
+      "newValue" : 300
+    },
+    "setting3" : {
+      "oldValue" : true,
+      "newValue" : "none"
+    },
+    "default" : {
+      "oldValue" : null,
+      "newValue" : [ "value1", "value2" ]
+    },
+    "chars2" : {
+      "oldValue" : [ "d", "e", "f" ],
+      "newValue" : false
+    },
+    "setting1" : {
+      "oldValue" : "Some value",
+      "newValue" : "Another value"
+    },
+    "numbers2" : {
+      "oldValue" : [ 2, 3, 4, 5 ],
+      "newValue" : [ 22, 33, 44, 55 ]
+    },
+    "checked" : {
+      "oldValue" : false,
+      "newValue" : true
+    },
+    "id" : {
+      "oldValue" : 45,
+      "newValue" : null
+    }
+  },
+  "unchangedItems" : {
+    "chars1" : [ "a", "b", "c" ],
+    "numbers1" : [ 1, 2, 3, 4 ]
+  },
+  "addedItems" : {
+    "key2" : "value2",
+    "numbers4" : [ 4, 5, 6 ],
+    "obj1" : {
+      "nestedKey" : "value",
+      "isNested" : true
+    }
+  },
+  "removedItems" : {
+    "key1" : "value1",
+    "numbers3" : [ 3, 4, 5 ]
+  }
+}
