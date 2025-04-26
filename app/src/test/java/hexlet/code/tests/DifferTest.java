@@ -22,12 +22,13 @@ class DifferTest {
     @ParameterizedTest
     @MethodSource("dataProvider")
     public void shouldGenerateExpectedDiff(
+            String testCase,
             String firstPath,
             String secondPath,
             String expectedDiff,
             String format) throws IOException {
-        logger.info("Comparing two files");
-        String methodResult = generate(firstPath, secondPath, format);
+        logger.info("Comparing two files - case: " + testCase);
+        String methodResult = testCase.contains("default format") ? generate(firstPath, secondPath) : generate(firstPath, secondPath, format);
         assertEquals(expectedDiff, methodResult, "The generated diff did not match the expected output.");
     }
 
@@ -37,46 +38,52 @@ class DifferTest {
         String expectedDiffForJsonFormat = getExpectedResult(JSON_FORMAT);
         return Stream.of(
                 Arguments.of(
+                        "case: json -> stylish format",
                         getResourceFilePath("nestedJsonFirst.json"),
                         getResourceFilePath("nestedJsonSecond.json"),
                         expectedDiffForStylishFormat,
                         "stylish"
                 ),
                 Arguments.of(
+                        "case: yml -> stylish format",
                         getResourceFilePath("nestedYmlFirst.yml"),
                         getResourceFilePath("nestedYmlSecond.yml"),
                         expectedDiffForStylishFormat,
                         "stylish"
                 ),
                 Arguments.of(
+                        "case: json -> plain format",
                         getResourceFilePath("nestedJsonFirst.json"),
                         getResourceFilePath("nestedJsonSecond.json"),
                         expectedDiffForPlainFormat,
                         "plain"
                 ),
                 Arguments.of(
+                        "case: yml -> plain format",
                         getResourceFilePath("nestedYmlFirst.yml"),
                         getResourceFilePath("nestedYmlSecond.yml"),
                         expectedDiffForPlainFormat,
                         "plain"
                 ),
                 Arguments.of(
+                        "case: json -> json format",
                         getResourceFilePath("nestedJsonFirst.json"),
                         getResourceFilePath("nestedJsonSecond.json"),
                         expectedDiffForJsonFormat,
                         "json"
                 ),
-                Arguments.of(
+                Arguments.of("case: yml -> json format",
                         getResourceFilePath("nestedYmlFirst.yml"),
                         getResourceFilePath("nestedYmlSecond.yml"),
                         expectedDiffForJsonFormat,
                         "json"
                 ),
                 Arguments.of(
+                        "case: json -> default format",
                         getResourceFilePath("nestedJsonFirst.json"),
                         getResourceFilePath("nestedJsonSecond.json"),
                         expectedDiffForStylishFormat,
-                        ""
+                        null
                 )
         );
     }
