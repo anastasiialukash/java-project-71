@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static hexlet.code.Formatters.JSON_FORMAT;
-import static hexlet.code.Formatters.PLAIN_FORMAT;
-import static hexlet.code.Formatters.STYLISH_FORMAT;
+import static hexlet.code.formatters.Formatters.JSON_FORMAT;
+import static hexlet.code.formatters.Formatters.PLAIN_FORMAT;
+import static hexlet.code.formatters.Formatters.STYLISH_FORMAT;
 
 public class TestDataProvider {
     private static final String TEST_DATA_PATH = "src/test/java/hexlet/resources";

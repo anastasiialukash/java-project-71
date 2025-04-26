@@ -9,9 +9,9 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import static hexlet.code.Differ.generate;
-import static hexlet.code.Formatters.JSON_FORMAT;
-import static hexlet.code.Formatters.PLAIN_FORMAT;
-import static hexlet.code.Formatters.STYLISH_FORMAT;
+import static hexlet.code.formatters.Formatters.JSON_FORMAT;
+import static hexlet.code.formatters.Formatters.PLAIN_FORMAT;
+import static hexlet.code.formatters.Formatters.STYLISH_FORMAT;
 import static hexlet.code.tests.providers.TestDataProvider.getExpectedResult;
 import static hexlet.code.tests.providers.TestDataProvider.getResourceFilePath;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,7 +28,8 @@ class DifferTest {
             String expectedDiff,
             String format) throws IOException {
         logger.info("Comparing two files - case: " + testCase);
-        String methodResult = testCase.contains("default format") ? generate(firstPath, secondPath) : generate(firstPath, secondPath, format);
+        String methodResult = testCase.contains("default format")
+               ? generate(firstPath, secondPath) : generate(firstPath, secondPath, format);
         assertEquals(expectedDiff, methodResult, "The generated diff did not match the expected output.");
     }
 
