@@ -18,6 +18,7 @@ public class ConfigNode {
 
     /***
      * Set key for a ConfigNode object.
+     * @param key
      */
     public void setKey(String key) {
         this.key = key;
@@ -33,6 +34,7 @@ public class ConfigNode {
 
     /***
      * Set status for a ConfigNode object.
+     * @param state
      */
     public void setState(NodeState state) {
         this.state = state;
@@ -48,6 +50,7 @@ public class ConfigNode {
 
     /***
      * Set oldValue for a ConfigNode object.
+     * @param oldValue
      */
     public void setOldValue(JsonNode oldValue) {
         this.oldValue = oldValue;
@@ -63,6 +66,7 @@ public class ConfigNode {
 
     /***
      * Set newValue for a ConfigNode object.
+     * @param newValue
      */
     public void setNewValue(JsonNode newValue) {
         this.newValue = newValue;
