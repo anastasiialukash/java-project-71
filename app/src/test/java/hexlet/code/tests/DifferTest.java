@@ -1,10 +1,14 @@
 package hexlet.code.tests;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -14,6 +18,7 @@ import static hexlet.code.formatters.Formatters.PLAIN_FORMAT;
 import static hexlet.code.formatters.Formatters.STYLISH_FORMAT;
 import static hexlet.code.tests.providers.TestDataProvider.getExpectedResult;
 import static hexlet.code.tests.providers.TestDataProvider.getResourceFilePath;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DifferTest {
@@ -28,9 +33,11 @@ class DifferTest {
             String expectedDiff,
             String format) throws IOException {
         logger.info("Comparing two files - case: " + testCase);
-        String methodResult = testCase.contains("default format")
+
+        String actualDiff = testCase.contains("default format")
                ? generate(firstPath, secondPath) : generate(firstPath, secondPath, format);
-        assertEquals(expectedDiff, methodResult, "The generated diff did not match the expected output.");
+
+        assertDiffsEqual(expectedDiff, actualDiff, format);
     }
 
     private static Stream<Arguments> dataProvider() throws IOException {
@@ -87,5 +94,21 @@ class DifferTest {
                         null
                 )
         );
+    }
+
+    private static void assertObjectsAreEqual(String expectedDiff, String actualDiff) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> expected = mapper.readValue(expectedDiff, new TypeReference<>() { });
+        Map<String, Object> actual = mapper.readValue(actualDiff, new TypeReference<>() { });
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    private static void assertDiffsEqual(String expectedDiff, String actualDiff, String format)
+            throws JsonProcessingException {
+        if (format != null && format.equals(JSON_FORMAT)) {
+            assertObjectsAreEqual(actualDiff, expectedDiff);
+        } else {
+            assertEquals(expectedDiff, actualDiff, "The generated diff did not match the expected output.");
+        }
     }
 }

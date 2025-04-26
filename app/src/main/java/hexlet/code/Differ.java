@@ -1,12 +1,11 @@
 package hexlet.code;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import hexlet.models.DiffModel;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
+import java.util.List;
 
 import static hexlet.code.DeltaCalculator.calculateDiff;
 import static hexlet.code.formatters.Formatters.getResultString;
@@ -19,7 +18,8 @@ public class Differ {
         firstFileJsonObj = getParsedObject(filePath1);
         secondFileJsonObj = getParsedObject(filePath2);
 
-        DiffModel diff = calculateDiff(firstFileJsonObj, secondFileJsonObj);
+        //DiffModel diff = calculateDiff(firstFileJsonObj, secondFileJsonObj);
+        List<ConfigNode> diff = calculateDiff(firstFileJsonObj, secondFileJsonObj);
 
         return getResultString(diff, format);
     }
