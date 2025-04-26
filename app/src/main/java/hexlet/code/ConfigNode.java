@@ -9,56 +9,60 @@ public class ConfigNode {
     private JsonNode newValue;
 
     /***
-     * Get key of a ConfigNode object
+     * Get key of a ConfigNode object.
+     * @return key
      */
     public String getKey() {
         return key;
     }
 
     /***
-     * Set key for a ConfigNode object
+     * Set key for a ConfigNode object.
      */
     public void setKey(String key) {
         this.key = key;
     }
 
     /***
-     * Get state of a ConfigNode object
+     * Get state of a ConfigNode object.
+     * @return state
      */
     public NodeState getState() {
         return state;
     }
 
     /***
-     * Set status for a ConfigNode object
+     * Set status for a ConfigNode object.
      */
     public void setState(NodeState state) {
         this.state = state;
     }
 
     /***
-     * Get oldValue of a ConfigNode object
+     * Get oldValue of a ConfigNode object.
+     * @return oldValue
      */
     public JsonNode getOldValue() {
         return oldValue;
     }
 
     /***
-     * Set oldValue for a ConfigNode object
+     * Set oldValue for a ConfigNode object.
      */
     public void setOldValue(JsonNode oldValue) {
         this.oldValue = oldValue;
     }
 
     /***
-     * Get newValue of a ConfigNode object
+     * Get newValue of a ConfigNode object.
+     * @return newValue
      */
     public JsonNode getNewValue() {
         return newValue;
     }
 
     /***
-     * Set newValue for a ConfigNode object
+     * Set newValue for a ConfigNode object.
      */
     public void setNewValue(JsonNode newValue) {
         this.newValue = newValue;
