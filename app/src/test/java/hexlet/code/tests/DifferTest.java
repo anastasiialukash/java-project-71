@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -98,8 +99,8 @@ class DifferTest {
 
     private static void assertObjectsAreEqual(String expectedDiff, String actualDiff) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> expected = mapper.readValue(expectedDiff, new TypeReference<>() { });
-        Map<String, Object> actual = mapper.readValue(actualDiff, new TypeReference<>() { });
+        List<Map<String, Object>> expected = mapper.readValue(expectedDiff, new TypeReference<>() { });
+        List<Map<String, Object>> actual = mapper.readValue(actualDiff, new TypeReference<>() { });
         assertThat(actual).isEqualTo(expected);
     }
 

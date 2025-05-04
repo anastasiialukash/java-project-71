@@ -10,7 +10,7 @@ import static hexlet.code.Differ.generate;
 
 @Command(name = "gendiff", mixinStandardHelpOptions = true, version = "1.0",
         description = "Compares two configuration files and shows a difference.")
-public class App implements Callable<String> {
+public class App implements Callable<Integer> {
     public static void main(String[] args) {
         int exitCode = new CommandLine(new App()).execute(args);
         System.exit(exitCode);
@@ -31,9 +31,9 @@ public class App implements Callable<String> {
      * @throws IOException
      */
     @Override
-    public String call() throws IOException {
+    public Integer call() throws IOException {
         String result = generate(filepath1, filepath2, format);
         System.out.println(result);
-        return result;
+        return 0;
     }
 }

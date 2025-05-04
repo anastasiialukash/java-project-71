@@ -18,7 +18,8 @@ public class Formatters {
         return switch (format) {
             case PLAIN_FORMAT -> getResultInPlainFormat(diff);
             case JSON_FORMAT -> getResultInJsonFormat(diff);
-            default -> getResultInStylishFormat(diff);
+            case STYLISH_FORMAT -> getResultInStylishFormat(diff);
+            default -> throw new IllegalStateException("Unexpected value: " + format);
         };
     }
 }

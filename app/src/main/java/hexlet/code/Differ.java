@@ -18,7 +18,6 @@ public class Differ {
         firstFileJsonObj = getParsedObject(filePath1);
         secondFileJsonObj = getParsedObject(filePath2);
 
-        //DiffModel diff = calculateDiff(firstFileJsonObj, secondFileJsonObj);
         List<ConfigNode> diff = calculateDiff(firstFileJsonObj, secondFileJsonObj);
 
         return getResultString(diff, format);
