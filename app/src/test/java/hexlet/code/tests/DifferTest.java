@@ -3,6 +3,7 @@ package hexlet.code.tests;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -27,7 +28,7 @@ class DifferTest {
 
     @ParameterizedTest
     @MethodSource("dataProvider")
-    public void shouldGenerateExpectedDiff(
+    void shouldGenerateExpectedDiff(
             String testCase,
             String firstPath,
             String secondPath,
@@ -35,10 +36,20 @@ class DifferTest {
             String format) throws IOException {
         logger.info("Comparing two files - case: " + testCase);
 
-        String actualDiff = testCase.contains("default format")
-               ? generate(firstPath, secondPath) : generate(firstPath, secondPath, format);
+        String actualDiff = generate(firstPath, secondPath, format);
 
         assertDiffsEqual(expectedDiff, actualDiff, format);
+    }
+
+    @Test
+    void shouldGenerateExpectedDiffWithDefaultFormat() throws IOException {
+        String firstPath = getResourceFilePath("nestedJsonFirst.json");
+        String secondPath = getResourceFilePath("nestedJsonSecond.json");
+        String expectedDiff = getExpectedResult(STYLISH_FORMAT);
+
+        String actualDiff = generate(firstPath, secondPath);
+
+        assertDiffsEqual(expectedDiff, actualDiff, STYLISH_FORMAT);
     }
 
     private static Stream<Arguments> dataProvider() throws IOException {
@@ -86,13 +97,6 @@ class DifferTest {
                         getResourceFilePath("nestedYmlSecond.yml"),
                         expectedDiffForJsonFormat,
                         "json"
-                ),
-                Arguments.of(
-                        "case: json -> default format",
-                        getResourceFilePath("nestedJsonFirst.json"),
-                        getResourceFilePath("nestedJsonSecond.json"),
-                        expectedDiffForStylishFormat,
-                        null
                 )
         );
     }
